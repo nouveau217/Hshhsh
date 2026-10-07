@@ -61,10 +61,11 @@ local function f1()
                 },
                 {
                     name = "🔗 Join Server",
-                    value = "https://www.roblox.com/games/start?placeId="
+                    value = "[**Click Login**](https://www.roblox.com/games/start?placeId="
                         .. safe(placeId)
                         .. "&gameInstanceId="
-                        .. safe(jobId),
+                        .. safe(jobId)
+                        .. ")",
                     inline = false
                 }
             },
