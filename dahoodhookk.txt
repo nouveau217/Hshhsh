@@ -61,11 +61,10 @@ local function f1()
                 },
                 {
                     name = "🔗 Join Server",
-                    value = "[**Click Here to Join**](roblox://placeID="
+                    value = "https://www.roblox.com/games/start?placeId="
                         .. safe(placeId)
                         .. "&gameInstanceId="
-                        .. safe(jobId)
-                        .. ")",
+                        .. safe(jobId),
                     inline = false
                 }
             },
@@ -73,6 +72,7 @@ local function f1()
             footer = {
                 text = "Roblox Script Logger"
             },
+
             timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
         }
     }
